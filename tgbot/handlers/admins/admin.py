@@ -1,11 +1,14 @@
 from aiogram import Dispatcher
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
+from tgbot.keyboards.inline.inline import AdminsInlineMarkup
 from tgbot.models.users import User
 
 
-async def admin_start(message: Message):
-    await message.reply("Hello, admin!")
+async def admin_panel(call: CallbackQuery):
+    await call.answer()
+    await call.message.edit_text('<b>🎛 Адменистративная паналь</b>',
+                                 reply_markup=AdminsInlineMarkup().menu())
 
 
 async def appoint_admin(message: Message, user: User):
@@ -21,5 +24,5 @@ async def appoint_admin(message: Message, user: User):
 
 
 def register_admin_start(dp: Dispatcher):
-    dp.register_message_handler(admin_start, commands=["start"], state="*", is_admin=True)
     dp.register_message_handler(appoint_admin, commands=["appoint_admin"], state="*")
+    dp.register_callback_query_handler(admin_panel, text="admin_panel")

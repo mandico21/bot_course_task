@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import suppress
+from typing import Optional
 
 from sqlalchemy import Column, BigInteger, insert, String, ForeignKey, update, func, Boolean, DateTime
 from sqlalchemy import select
@@ -16,6 +17,9 @@ class User(Base):
     telegram_id = Column(BigInteger, primary_key=True)
     full_name = Column(String(length=100))
     username = Column(String(length=100), nullable=True)
+    invite_code = Column(String(length=5), default=None)
+    balance = Column(BigInteger, default=0)
+    passed = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
     created_at = Column(DateTime(True), server_default=func.now())
     updated_at = Column(DateTime(True), default=func.now(), onupdate=func.now(), server_default=func.now())
@@ -27,6 +31,23 @@ class User(Base):
             request = await db_session.execute(sql)
             user: cls = request.scalar()
         return user
+
+    @classmethod
+    async def get_user_code(cls, session_maker: sessionmaker, invite_code: str) -> 'User':
+        async with session_maker() as db_session:
+            sql = select(cls).where(cls.invite_code == invite_code)
+            request = await db_session.execute(sql)
+            user: cls = request.scalar()
+        return user
+
+    @classmethod
+    async def get_all_user(cls, db_session: sessionmaker) -> 'User':
+        async with db_session() as db_session:
+            sql = select(cls.telegram_id)
+            request = await db_session.execute(sql)
+            user: cls = request.scalars().all()
+        return user
+
 
     @classmethod
     async def add_user(cls,
@@ -42,9 +63,10 @@ class User(Base):
             await db_session.commit()
             return result.first()
 
-    async def update_user(self, session_maker: sessionmaker, updated_fields: dict) -> 'User':
+    async def update_user(self, session_maker: sessionmaker, updated_fields: dict, telegram_id: Optional = None) -> 'User':
+        telegram_id = self.telegram_id if not telegram_id else telegram_id
         async with session_maker() as db_session:
-            sql = update(User).where(User.telegram_id == self.telegram_id).values(**updated_fields)
+            sql = update(User).where(User.telegram_id == telegram_id).values(**updated_fields)
             result = await db_session.execute(sql)
             await db_session.commit()
             return result
