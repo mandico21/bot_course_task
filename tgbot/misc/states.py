@@ -22,3 +22,20 @@ class AddProductStorage(StatesGroup):
     name = State()
     description = State()
     price = State()
+    photo = State()
+    expectations = State()
+
+
+class BuyProductStorage(StatesGroup):
+    beginning_product = State()
+    get_delivery_adress = State()
+    payment_product = State()
+    check_payment = State()
+
+
+class EditProductStorage(StatesGroup):
+    edit_product_search = State()
+    edit_product_quantity = State()
+    edit_product_name = State()
+    edit_product_description = State()
+    edit_product_price = State()

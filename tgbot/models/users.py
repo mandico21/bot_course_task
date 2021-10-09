@@ -1,13 +1,9 @@
-import asyncio
-from contextlib import suppress
 from typing import Optional
 
 from sqlalchemy import Column, BigInteger, insert, String, ForeignKey, update, func, Boolean, DateTime
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from tgbot.config import load_config
-from tgbot.services.database import create_db_session
 from tgbot.services.db_base import Base
 
 
@@ -48,7 +44,6 @@ class User(Base):
             user: cls = request.scalars().all()
         return user
 
-
     @classmethod
     async def add_user(cls,
                        session_maker: sessionmaker,
@@ -63,7 +58,8 @@ class User(Base):
             await db_session.commit()
             return result.first()
 
-    async def update_user(self, session_maker: sessionmaker, updated_fields: dict, telegram_id: Optional = None) -> 'User':
+    async def update_user(self, session_maker: sessionmaker, updated_fields: dict,
+                          telegram_id: Optional = None) -> 'User':
         telegram_id = self.telegram_id if not telegram_id else telegram_id
         async with session_maker() as db_session:
             sql = update(User).where(User.telegram_id == telegram_id).values(**updated_fields)

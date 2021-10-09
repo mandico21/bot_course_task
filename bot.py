@@ -4,11 +4,13 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
+from glQiwiApi import QiwiWrapper
 
 from tgbot.config import load_config
 from tgbot.filters.admin import AdminFilter
 from tgbot.handlers.admins import setup_admins
 from tgbot.handlers.echo import setup_echo
+from tgbot.handlers.inline import setup_inline
 from tgbot.handlers.tools import setup_tools
 from tgbot.handlers.users import setup_users
 from tgbot.middlewares.db import DbMiddleware
@@ -30,7 +32,7 @@ def register_all_handlers(dp):
     setup_admins(dp)
     setup_users(dp)
     setup_tools(dp)
-
+    setup_inline(dp)
 
     setup_echo(dp)
 
@@ -51,6 +53,8 @@ async def main():
 
     bot['config'] = config
     bot['db'] = await create_db_session(config)
+    bot['wallet'] = QiwiWrapper(api_access_token=config.misc.qiwi_token, phone_number=config.misc.wallet,
+                                secret_p2p=config.misc.qiwi_sec)
 
     register_all_middlewares(dp)
     register_all_filters(dp)

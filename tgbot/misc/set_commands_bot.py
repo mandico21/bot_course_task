@@ -1,6 +1,8 @@
 from aiogram import types, Dispatcher
 from aiogram.types import BotCommandScopeChat
 
+from tgbot.config import Config
+
 
 async def set_commands(dp: Dispatcher):
     await dp.bot.set_my_commands(

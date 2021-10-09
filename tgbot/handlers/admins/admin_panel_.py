@@ -1,6 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.types import Message, CallbackQuery
 
+from tgbot.config import Config
 from tgbot.keyboards.inline.iadmins import AdminsInlineMarkup
 from tgbot.models.users import User
 
@@ -12,14 +13,14 @@ async def admin_panel(call: CallbackQuery):
 
 
 async def appoint_admin(message: Message, user: User):
-    config: Config = message.bot.get('config')
-    if str(message.from_user.id) in config.tg_bot.admin_ids:
+    config = message.bot.get('config')
+    if int(message.from_user.id) == config.tg_bot.admin_ids:
         if user.admin:
             return await message.answer('Вы уже являетесь администратором')
 
         db_session = message.bot.get('db')
         await message.answer('Вы назначали себя администратором')
-        await user.update_user(db_session, updated_fields={'admin': True})
+        await user.update_user(db_session, updated_fields={'admin': True, 'passed': True})
         return
 
 

@@ -21,6 +21,10 @@ class TgBot:
 
 @dataclass
 class Miscellaneous:
+    qiwi_token: str
+    wallet: int
+    qiwi_pay: str
+    qiwi_sec: str
     other_params: str = None
 
 
@@ -38,7 +42,7 @@ def load_config(path: str = None):
     return Config(
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
-            admin_ids=env.list("ADMINS"),
+            admin_ids=env.int("ADMINS"),
             use_redis=env.bool("USE_REDIS"),
             tech_groups=env.int("TECH_GROUPS"),
         ),
@@ -48,5 +52,10 @@ def load_config(path: str = None):
             user=env.str('DB_USER'),
             database=env.str('DB_NAME')
         ),
-        misc=Miscellaneous()
+        misc=Miscellaneous(
+            qiwi_token=env.str('QIWI'),
+            wallet=env.int('WALLET'),
+            qiwi_pay=env.str('QIWI_P_PAY'),
+            qiwi_sec=env.str('QIWI_P_SICRET'),
+        )
     )

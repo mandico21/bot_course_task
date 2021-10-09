@@ -1,10 +1,16 @@
+import re
+
 from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
+from aiogram.utils.markdown import hide_link
 
+from tgbot.keyboards.inline.itools import ToolsInlineMarkup
 from tgbot.keyboards.inline.iusers import UsersInlineMarkup
 from tgbot.misc.states import StorageUsers
-from tgbot.models.users import User
+from tgbot.models.products import Product
+from tgbot.models.users import User, Referral
 
 
 async def user_start(message: Message, user: User, state: FSMContext):
@@ -34,6 +40,30 @@ async def user_start(message: Message, user: User, state: FSMContext):
     await state.update_data(referrer_user=check_user)
     await StorageUsers.register_user.set()
     await user_registration(message, state, user)
+
+
+async def start_show_product(message: Message, user: User, deep_link):
+    """Обработка пользователя после нажатия на кнопку 'Показать товар'"""
+    if not user.passed:
+        return await message.answer(f'❌ У Вас нет доступа!\n'
+                                    f'Чтобы использовать этого бота введите код приглашения, '
+                                    f'либо пройдите по реферальной ссылке\n',
+                                    reply_markup=UsersInlineMarkup().register())
+
+    sessionmaker = message.bot.get('db')
+    item_id = int(deep_link[0].split('-')[1])
+
+    check_items = await Product.get_product(sessionmaker, item_id)
+    if check_items is None:
+        return await message.answer('❌ Ошибка!\nТовар который вы заращиваете не найден')
+
+    await message.answer(f'{hide_link(check_items.url_img)}'
+                         f'📫 Артикл: <b><i>{check_items.item_id}</i></b>\n'
+                         f'📌 Название: <b><i>{check_items.name}</i></b>\n'
+                         f'💎 Количество: <b><i>{check_items.quantity}</i></b>\n'
+                         f'📝 Описание: <b><i>{check_items.description}</i></b>\n'
+                         f'💰 Цена: <b><i>{check_items.price} ₽</i></b>',
+                         reply_markup=ToolsInlineMarkup().buy_product(check_items.item_id, user.admin))
 
 
 async def invite_code_input(call: CallbackQuery):
@@ -78,11 +108,12 @@ async def user_registration(message: Message, state: FSMContext, user: User):
                          f'<a href="tg://user?id={invite_user.telegram_id}">{invite_user.full_name}</a>\n'
                          f'Вы можете получить 10 бонусых рублей, если пригласите рефералов\n'
                          f'Ваша реферальная ссылка: t.me/{bot_username}?start={message.from_user.id}',
-                         reply_markup=await get_user_menu(user.admin))
+                         reply_markup=UsersInlineMarkup().menu(user.passed))
     await state.finish()
 
 
 def register_start(dp: Dispatcher):
+    dp.register_message_handler(start_show_product, CommandStart(deep_link=re.compile(r'^item_id-\d+$')))
     dp.register_message_handler(user_start, commands=["start"])
     dp.register_callback_query_handler(invite_code_input, text="invitation_code")
     dp.register_message_handler(invite_code_check, state=StorageUsers.invite_code)
