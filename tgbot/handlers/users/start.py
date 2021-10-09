@@ -2,7 +2,7 @@ from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, CallbackQuery
 
-from tgbot.keyboards.inline.inline import UsersInlineMarkup
+from tgbot.keyboards.inline.iusers import UsersInlineMarkup
 from tgbot.misc.states import StorageUsers
 from tgbot.models.users import User
 
@@ -17,7 +17,7 @@ async def user_start(message: Message, user: User, state: FSMContext):
     sessionmaker = message.bot.get('db')
     code = message.text if not message.is_command() else message.get_args()
     if not code or code == "connect_user":
-        return await message.answer(f'❌ У Вас нет доступа!\n'
+        return await message.answer(f'❌ Ошибка\nУ Вас нет доступа!\n'
                                     f'Чтобы использовать этого бота введите код приглашения, '
                                     f'либо пройдите по реферальной ссылке\n',
                                     reply_markup=UsersInlineMarkup().register())
@@ -49,7 +49,7 @@ async def invite_code_check(message: Message, state: FSMContext, user: User):
 
     if invite_code is None or message.text == user.invite_code:
         await state.finish()
-        return await message.answer("❌ Ошибка\nДанный код не был найден, проверьте на правильность его ввода",
+        return await message.answer("❌ Ошибка\nДанный код не был найден, проверьте правильность его ввода",
                                     reply_markup=UsersInlineMarkup().register())
 
     await state.update_data(referrer_user=invite_code)

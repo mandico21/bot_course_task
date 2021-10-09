@@ -2,7 +2,7 @@ from aiogram import Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from tgbot.keyboards.inline.inline import UsersInlineMarkup
+from tgbot.keyboards.inline.iusers import UsersInlineMarkup
 from tgbot.models.users import User
 
 

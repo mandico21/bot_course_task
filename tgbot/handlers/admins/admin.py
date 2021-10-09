@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 from aiogram.types import Message, CallbackQuery
 
-from tgbot.keyboards.inline.inline import AdminsInlineMarkup
+from tgbot.keyboards.inline.iadmins import AdminsInlineMarkup
 from tgbot.models.users import User
 
 

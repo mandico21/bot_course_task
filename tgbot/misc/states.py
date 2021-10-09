@@ -11,3 +11,14 @@ class StorageUsers(StatesGroup):
 class MailingStorage(StatesGroup):
     mailing_start = State()
     progressing = State()
+
+
+class FeedbackStorage(StatesGroup):
+    feedback_start = State()
+    feedback_statement = State()
+
+
+class AddProductStorage(StatesGroup):
+    name = State()
+    description = State()
+    price = State()
