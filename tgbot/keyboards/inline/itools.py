@@ -8,6 +8,7 @@ from tgbot.misc.markup_constructor.inline import InlineMarkupConstructor
 class ToolsInlineMarkup(InlineMarkupConstructor):
     buy_pod = CallbackData('buy_product', 'item_id')
     edit_call = CallbackData('edit_coproduct', 'item_id')
+    users_call = CallbackData('users_call', 'user_id')
     bill_cd = CallbackData('bill', 'bill_id')
 
     def negotiate(self) -> InlineKeyboardMarkup:
@@ -33,6 +34,13 @@ class ToolsInlineMarkup(InlineMarkupConstructor):
         if is_admin:
             schema = [1, 1]
             actions.append({'text': '🛠 Редактировать товар', 'callback_data': self.edit_call.new(item_id=item_id)})
+        return self.markup(actions, schema)
+
+    def check_user(self, bot_username: str, user_id: int) -> InlineKeyboardMarkup:
+        schema = [1]
+        actions = [
+            {'text': '👤 Профиль', 'url': f'https://t.me/{bot_username}?start=user_id-{user_id}'},
+        ]
         return self.markup(actions, schema)
 
     def product_payment(self) -> InlineKeyboardMarkup:

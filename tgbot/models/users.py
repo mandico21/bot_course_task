@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy import Column, BigInteger, insert, String, ForeignKey, update, func, Boolean, DateTime
 from sqlalchemy import select
@@ -37,11 +37,15 @@ class User(Base):
         return user
 
     @classmethod
-    async def get_all_user(cls, db_session: sessionmaker) -> 'User':
-        async with db_session() as db_session:
-            sql = select(cls.telegram_id)
+    async def get_all_user(cls, session_maker: sessionmaker, query: str) -> List['User']:
+        async with session_maker() as db_session:
+            if query:
+                sql = select(cls).filter(
+                    func.lower(cls.full_name).like(f'%{query.lower()}%')).order_by(cls.full_name)
+            else:
+                sql = select(cls).order_by(cls.full_name)
             request = await db_session.execute(sql)
-            user: cls = request.scalars().all()
+            user: cls = request.scalars()
         return user
 
     @classmethod

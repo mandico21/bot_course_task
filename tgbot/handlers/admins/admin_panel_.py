@@ -13,8 +13,8 @@ async def admin_panel(call: CallbackQuery):
 
 
 async def appoint_admin(message: Message, user: User):
-    config = message.bot.get('config')
-    if int(message.from_user.id) == config.tg_bot.admin_ids:
+    config: Config = message.bot.get('config')
+    if int(message.from_user.id) in config.tg_bot.admin_ids:
         if user.admin:
             return await message.answer('Вы уже являетесь администратором')
 

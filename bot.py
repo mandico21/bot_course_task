@@ -9,7 +9,6 @@ from glQiwiApi import QiwiWrapper
 from tgbot.config import load_config
 from tgbot.filters.admin import AdminFilter
 from tgbot.handlers.admins import setup_admins
-from tgbot.handlers.echo import setup_echo
 from tgbot.handlers.inline import setup_inline
 from tgbot.handlers.tools import setup_tools
 from tgbot.handlers.users import setup_users
@@ -33,8 +32,6 @@ def register_all_handlers(dp):
     setup_users(dp)
     setup_tools(dp)
     setup_inline(dp)
-
-    setup_echo(dp)
 
 
 async def main():

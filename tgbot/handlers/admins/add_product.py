@@ -83,7 +83,7 @@ async def add_product_expectations(call: CallbackQuery, state: FSMContext, user:
 
     if action == 'cancel':
         await call.bot.edit_message_reply_markup(call.message.chat.id, data.get('bot_message'))
-        await call.message.answer(f'❌ Вы отменили добавление товара!\n',
+        await call.message.answer('❌ Вы отменили добавление товара!\n',
                                   reply_markup=UsersInlineMarkup().menu(user.admin))
     elif action == 'confirm':
         await Product.add_product(sessionmaker,
