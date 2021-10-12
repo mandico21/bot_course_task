@@ -36,8 +36,10 @@ async def edit_product_search(call: CallbackQuery, callback_data: dict, state: F
 async def edit_product_all(call: CallbackQuery, callback_data: dict, state: FSMContext):
     product_id = callback_data.get('item_id')
     button = callback_data.get('button')
-    prefix = {'name': 'е <b>название</b>', 'description': 'е <b>описание</b>',
-              'price': 'ю <b>стоимость</b>', 'quantity': 'е <b>количество</b>'}
+    prefix = {'name': 'е <b>название</b>',
+              'description': 'е <b>описание</b>',
+              'price': 'ю <b>стоимость</b>',
+              'quantity': 'е <b>количество</b>'}
 
     await call.message.delete()
     await call.message.answer(f'✏ Укажите ново{prefix[button]} товара')
@@ -74,8 +76,10 @@ async def edit_product_(message: Message, state: FSMContext):
     sessionmaker = message.bot.get('db')
     await Product.update_product(sessionmaker, int(data['product_id']), updated_fields={data['button']: message.text})
     product = await Product.get_product(sessionmaker, int(data['product_id']))
-    prefix = {'name': '<b>название</b>', 'description': '<b>описание</b>',
-              'price': '<b>стоимость</b>', 'quantity': '<b>количество</b>'}
+    prefix = {'name': '<b>название</b>',
+              'description': '<b>описание</b>',
+              'price': '<b>стоимость</b>',
+              'quantity': '<b>количество</b>'}
     await message.answer(f'✅ Вы успешно изменили {prefix[data["button"]]} товара')
     await message.answer_photo(product.url_img,
                                show_product_text(product),
