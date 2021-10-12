@@ -11,7 +11,7 @@ git clone https://github.com/mandico21/course_task.git
 ```
 Переименовать `.env.dist` в `.env`
 
-###Настройка файла .env
+### Настройка файла .env
 1. Указать в `BOT_TOKEN` токен бота, токен можно получить тут [@BotFather](https://t.me/botfather)
 2. Указать свой Telegram id в `ADMINS`, получить можно тут [@my_id_bot](https://t.me/my_id_bot)
 3. В `TECH_GROUPS` укажите id группы, для обратной связи
@@ -20,7 +20,7 @@ git clone https://github.com/mandico21/course_task.git
 6. В `WALLET` нужно указать номер Qiwi кошелька
 7. В `QIWI_P_SICRET` нужно указать секретный токен, получить можно тут [Secret_token](https://qiwi.com/p2p-admin/transfers/api)
 
-###Запуск
+### Запуск
 ```
 sudo docker-compose up
 ```
