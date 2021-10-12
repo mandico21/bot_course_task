@@ -10,7 +10,7 @@ from tgbot.services.db_base import Base
 class User(Base):
     __tablename__ = "telegram_users"
 
-    telegram_id = Column(BigInteger, primary_key=True)
+    telegram_id: int = Column(BigInteger, primary_key=True)
     full_name = Column(String(length=100))
     username = Column(String(length=100), nullable=True)
     invite_code = Column(String(length=5), default=None)

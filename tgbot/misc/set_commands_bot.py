@@ -16,6 +16,7 @@ async def set_commands(dp: Dispatcher):
         await dp.bot.set_my_commands(
             [
                 types.BotCommand("appoint_admin", "Назначить себя админом в БД"),
+                types.BotCommand("cancel", "Отменить FSM состояния"),
             ],
             BotCommandScopeChat(admin)
         )

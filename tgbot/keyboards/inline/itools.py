@@ -26,7 +26,7 @@ class ToolsInlineMarkup(InlineMarkupConstructor):
         ]
         return self.markup(actions, schema)
 
-    def buy_product(self, item_id: str, is_admin: bool) -> InlineKeyboardMarkup:
+    def buy_product(self, item_id: int, is_admin: bool) -> InlineKeyboardMarkup:
         schema = [1]
         actions = [
             {'text': '🛒 Купить товар', 'callback_data': self.buy_pod.new(item_id=item_id)},

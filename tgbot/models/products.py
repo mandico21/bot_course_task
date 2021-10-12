@@ -8,11 +8,11 @@ class Product(Base):
     __tablename__ = "product"
 
     item_id = Column(BigInteger, primary_key=True, autoincrement=True)
-    name = Column(String(length=50))
+    name = Column(String(length=100))
     description = Column(String(length=600))
     price = Column(BigInteger)
     quantity = Column(Integer, default=1)
-    url_img = Column(String(250))
+    url_img = Column(String(350))
     created_at = Column(DateTime(True), server_default=func.now())
 
     @classmethod

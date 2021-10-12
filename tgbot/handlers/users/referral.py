@@ -22,20 +22,20 @@ async def show_referral(call: CallbackQuery, user: User):
 async def install_referral_code(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await call.message.edit_text(f'✏️ Введите свое кодовое слово\n'
-                              f'Максимальная длина кода 5 символов\n'
-                              f'Код можно будет установить лишь 1 раз. Поменять или обновить его не получится!')
+                                 f'Максимальная длина кода 5 символов\n'
+                                 f'Код можно будет установить лишь 1 раз. Поменять или обновить его не получится!')
     await state.set_state('invite_install')
 
 
 async def install_referral_code2(message: Message, state: FSMContext, user: User):
     if len(message.text) > 5:
-        return await message.answer(f'❌ Ошибка\nДлина более 5 символов\n'
+        return await message.answer(f'❌ Ошибка\n🔖 Длина более 5 символов\n'
                                     f'Введите кодовое слово корректно!')
 
     sessionmaker = message.bot.get('db')
     code_check = await user.get_user_code(sessionmaker, str(message.text))
     if code_check is not None:
-        return await message.answer(f'❌ Ошибка\nЭто кодовое слово уже занято!\n'
+        return await message.answer(f'❌ Ошибка\n🔖 Это кодовое слово уже занято!\n'
                                     f'Попробуйте придумать другое кодовое слово.\n')
 
     await user.update_user(sessionmaker, updated_fields={'invite_code': message.text})

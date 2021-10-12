@@ -42,6 +42,7 @@ class BuyProductStorage(StatesGroup):
 
 class EditProductStorage(StatesGroup):
     edit_product_search = State()
+    edit_product_all = State()
     edit_product_quantity = State()
     edit_product_name = State()
     edit_product_description = State()

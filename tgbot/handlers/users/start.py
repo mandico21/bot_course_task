@@ -29,12 +29,12 @@ async def user_start(message: Message, user: User, state: FSMContext):
                                     reply_markup=UsersInlineMarkup().register())
 
     if not code.isdigit():
-        return await message.answer('❌ Ошибка\nДанная ссылка недействительна.',
+        return await message.answer('❌ Ошибка\n🔖 Данная ссылка недействительна.',
                                     reply_markup=UsersInlineMarkup().register())
 
     check_user = await user.get_user(sessionmaker, int(code))
     if int(code) == user.telegram_id or check_user is None:
-        return await message.answer('❌ Ошибка\nДанная ссылка недействительна.',
+        return await message.answer('❌ Ошибка\n🔖 Данная ссылка недействительна.',
                                     reply_markup=UsersInlineMarkup().register())
 
     await state.update_data(referrer_user=check_user)
@@ -55,15 +55,16 @@ async def start_show_product(message: Message, user: User, deep_link):
 
     check_items = await Product.get_product(sessionmaker, item_id)
     if check_items is None:
-        return await message.answer('❌ Ошибка!\nТовар который вы заращиваете не найден')
+        return await message.answer('❌ Ошибка!\n🔖 Товар который вы заращиваете не найден')
 
-    await message.answer(f'{hide_link(check_items.url_img)}'
-                         f'📫 Артикл: <b><i>{check_items.item_id}</i></b>\n'
-                         f'📌 Название: <b><i>{check_items.name}</i></b>\n'
-                         f'💎 Количество: <b><i>{check_items.quantity}</i></b>\n'
-                         f'📝 Описание: <b><i>{check_items.description}</i></b>\n'
-                         f'💰 Цена: <b><i>{check_items.price} ₽</i></b>',
-                         reply_markup=ToolsInlineMarkup().buy_product(check_items.item_id, user.admin))
+    await message.answer_photo(check_items.url_img,
+                               f'📫 Артикл: <b><i>{check_items.item_id}</i></b>\n'
+                               f'📌 Название: <b><i>{check_items.name}</i></b>\n'
+                               f'💎 Количество: <b><i>{check_items.quantity}</i></b>\n'
+                               f'📝 Описание: <b><i>{check_items.description}</i></b>\n'
+                               f'💰 Цена: <b><i>{check_items.price} ₽</i></b>',
+                               reply_markup=ToolsInlineMarkup().buy_product(int(check_items.item_id), user.admin))
+
 
 
 async def invite_code_input(call: CallbackQuery):
@@ -79,7 +80,7 @@ async def invite_code_check(message: Message, state: FSMContext, user: User):
 
     if invite_code is None or message.text == user.invite_code:
         await state.finish()
-        return await message.answer("❌ Ошибка\nДанный код не был найден, проверьте правильность его ввода",
+        return await message.answer("❌ Ошибка\n🔖 Данный код не был найден, проверьте правильность его ввода",
                                     reply_markup=UsersInlineMarkup().register())
 
     await state.update_data(referrer_user=invite_code)

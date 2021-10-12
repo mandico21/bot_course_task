@@ -5,6 +5,7 @@ from tgbot.misc.markup_constructor.inline import InlineMarkupConstructor
 
 
 class AdminsInlineMarkup(InlineMarkupConstructor):
+    product_call = CallbackData('edit_call', 'button', 'item_id')
 
     def menu(self) -> InlineKeyboardMarkup:
         schema = [2, 1, 1]
@@ -16,13 +17,17 @@ class AdminsInlineMarkup(InlineMarkupConstructor):
         ]
         return self.markup(actions, schema)
 
-    def edit(self) -> InlineKeyboardMarkup:
+    def edit(self, item_id: int) -> InlineKeyboardMarkup:
         schema = [1, 1, 1, 1, 1]
         actions = [
-            {'text': '📌 Редактировать название', 'callback_data': 'edit_name'},
-            {'text': '📝 Редактировать описание', 'callback_data': 'edit_description'},
-            {'text': '💎 Редактировать количество', 'callback_data': 'edit_quantity'},
-            {'text': '💰 Редактировать цену', 'callback_data': 'edit_price'},
+            {'text': '📌 Редактировать название',
+             'callback_data': self.product_call.new(button='name', item_id=item_id)},
+            {'text': '📝 Редактировать описание',
+             'callback_data': self.product_call.new(button='description', item_id=item_id)},
+            {'text': '💎 Редактировать количество',
+             'callback_data': self.product_call.new(button='quantity', item_id=item_id)},
+            {'text': '💰 Редактировать цену',
+             'callback_data': self.product_call.new(button='price', item_id=item_id)},
             {'text': '❌ Отмена', 'callback_data': 'cancel'},
         ]
         return self.markup(actions, schema)

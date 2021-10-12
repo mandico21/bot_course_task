@@ -29,8 +29,8 @@ def register_all_filters(dp):
 
 def register_all_handlers(dp):
     setup_admins(dp)
-    setup_users(dp)
     setup_tools(dp)
+    setup_users(dp)
     setup_inline(dp)
 
 

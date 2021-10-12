@@ -48,7 +48,7 @@ async def get_price(message: Message, state: FSMContext):
         await AddProductStorage.photo.set()
     else:
         bms = await message.answer('❌ Ошибка\n'
-                                   'Укажите только цифры, без пробелом и других символов',
+                                   '🔖 Укажите только цифры, без пробелом и других символов',
                                    reply_markup=ToolsInlineMarkup().cancel())
     async with state.proxy() as data:
         msg = data['bot_message']
