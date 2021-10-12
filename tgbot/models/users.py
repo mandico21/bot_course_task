@@ -46,7 +46,15 @@ class User(Base):
                 sql = select(cls).order_by(cls.full_name)
             request = await db_session.execute(sql)
             user: cls = request.scalars()
-        return user
+        return user\
+
+    @classmethod
+    async def get_users(cls, session_maker: sessionmaker) -> 'User':
+        async with session_maker() as db_session:
+            sql = select(cls.telegram_id)
+            request = await db_session.execute(sql)
+            user: cls = request.scalars()
+        return user.all()
 
     @classmethod
     async def add_user(cls,

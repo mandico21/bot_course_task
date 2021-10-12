@@ -41,7 +41,7 @@ async def mailing_launch(call: CallbackQuery, state: FSMContext, user: User):
         await call.message.edit_text('<b>🎛 Административная панель</b>',
                                      reply_markup=UsersInlineMarkup().menu(user.admin))
     elif action == 'confirm':
-        users = await user.get_all_user(sessionmaker)
+        users = await user.get_users(sessionmaker)
         await call.answer('📢 Рассылка началась...', show_alert=True)
 
         broadcaster = MessageBroadcaster(users, message=text)
