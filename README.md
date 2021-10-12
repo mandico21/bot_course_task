@@ -24,3 +24,9 @@ git clone https://github.com/mandico21/course_task.git
 ```
 sudo docker-compose up
 ```
+
+## В Боте
+
+```
+Пропиште /start, затем /appoint_admin
+```
